@@ -105,7 +105,6 @@ const defaultState = {
     relevant: [],
     "time-bound": [],
   },
-  saved: [],
 };
 
 const state = loadState();
@@ -122,9 +121,7 @@ const els = {
   smartProgress: document.querySelector("#smart-progress"),
   canvas: document.querySelector("#smart-canvas"),
   library: document.querySelector("#card-library"),
-  savedList: document.querySelector("#saved-objectives"),
   copyObjective: document.querySelector("#copy-objective"),
-  saveObjective: document.querySelector("#save-objective"),
   resetDraft: document.querySelector("#reset-draft"),
   libraryCardTemplate: document.querySelector("#library-card-template"),
   boardCardTemplate: document.querySelector("#board-card-template"),
@@ -139,7 +136,6 @@ bindEvents();
 function bindEvents() {
   els.form.addEventListener("input", handleDraftInput);
   els.copyObjective.addEventListener("click", copyObjective);
-  els.saveObjective.addEventListener("click", saveObjective);
   els.resetDraft.addEventListener("click", resetDraft);
 }
 
@@ -159,7 +155,6 @@ function renderAll() {
   renderProgress();
   renderCanvas();
   renderLibrary();
-  renderSaved();
 }
 
 function renderPreview() {
@@ -282,46 +277,6 @@ function renderLibrary() {
   );
 }
 
-function renderSaved() {
-  if (!state.saved.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty-state";
-    empty.textContent = "Save a draft to build a reusable bank of Unit 2 revision objectives.";
-    els.savedList.replaceChildren(empty);
-    return;
-  }
-
-  els.savedList.replaceChildren(
-    ...state.saved.map((item) => {
-      const card = document.createElement("article");
-      card.className = "saved-card";
-
-      const meta = summarizeDimensions(item.board);
-      card.innerHTML = `
-        <div class="saved-card-header">
-          <div>
-            <h3>${escapeHtml(item.title)}</h3>
-            <p>${escapeHtml(item.objective)}</p>
-          </div>
-          <div class="saved-meta">${formatSavedAt(item.savedAt)}</div>
-        </div>
-        <div class="saved-actions">
-          <button class="secondary-button" type="button" data-action="load" data-id="${item.id}">Load draft</button>
-          <button class="ghost-button" type="button" data-action="copy" data-id="${item.id}">Copy</button>
-          <button class="ghost-button" type="button" data-action="delete" data-id="${item.id}">Delete</button>
-        </div>
-        <div class="saved-meta">${meta}</div>
-      `;
-
-      card.querySelectorAll("button").forEach((button) => {
-        button.addEventListener("click", handleSavedAction);
-      });
-
-      return card;
-    }),
-  );
-}
-
 function renderLibraryCard(card) {
   const node = els.libraryCardTemplate.content.firstElementChild.cloneNode(true);
   node.dataset.cardId = card.id;
@@ -439,65 +394,12 @@ async function copyObjective() {
   }
 }
 
-function saveObjective() {
-  const objective = buildObjectiveText();
-  const title = state.draft.focus || "Untitled revision objective";
-
-  const entry = {
-    id: crypto.randomUUID(),
-    title,
-    objective,
-    draft: structuredClone(state.draft),
-    board: structuredClone(state.board),
-    savedAt: new Date().toISOString(),
-  };
-
-  state.saved.unshift(entry);
-  persist();
-  renderSaved();
-}
-
 function resetDraft() {
   state.draft = structuredClone(defaultState.draft);
   state.board = structuredClone(defaultState.board);
   hydrateInputs();
   persist();
   renderAll();
-}
-
-async function handleSavedAction(event) {
-  const button = event.currentTarget;
-  const id = button.dataset.id;
-  const action = button.dataset.action;
-  const saved = state.saved.find((item) => item.id === id);
-
-  if (!saved) {
-    return;
-  }
-
-  if (action === "load") {
-    state.draft = structuredClone(saved.draft);
-    state.board = structuredClone(saved.board);
-    hydrateInputs();
-    persist();
-    renderAll();
-    return;
-  }
-
-  if (action === "copy") {
-    try {
-      await navigator.clipboard.writeText(saved.objective);
-    } catch {
-      window.alert("Clipboard access failed while copying the saved objective.");
-    }
-    return;
-  }
-
-  if (action === "delete") {
-    state.saved = state.saved.filter((item) => item.id !== id);
-    persist();
-    renderSaved();
-  }
 }
 
 function buildObjectiveText() {
@@ -514,12 +416,6 @@ function buildObjectiveText() {
   const supportText = supports.length ? ` Supported by ${joinAsSentence(supports)}.` : "";
 
   return `${capitalize(focus)} will ${action} and ${metric} ${timeframe}.${supportText}`;
-}
-
-function summarizeDimensions(board) {
-  return dimensions
-    .map((dimension) => `${dimension.name}: ${board[dimension.id].length}`)
-    .join(" | ");
 }
 
 function hydrateInputs() {
@@ -540,7 +436,6 @@ function loadState() {
     return {
       draft: { ...defaultState.draft, ...parsed.draft },
       board: { ...structuredClone(defaultState.board), ...parsed.board },
-      saved: Array.isArray(parsed.saved) ? parsed.saved : [],
     };
   } catch {
     return structuredClone(defaultState);
@@ -580,15 +475,6 @@ function joinAsSentence(items) {
     return `${items[0]} and ${items[1]}`;
   }
   return `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
-}
-
-function formatSavedAt(value) {
-  return new Date(value).toLocaleString("en-GB", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 function escapeHtml(text) {
