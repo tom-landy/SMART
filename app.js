@@ -4,27 +4,27 @@ const dimensions = [
   {
     id: "specific",
     name: "Specific",
-    prompt: "Name the exact Unit 2 topic, skill, or question type being revised.",
+    prompt: "Name the exact Unit 2 topic, skill, or question type to revise.",
   },
   {
     id: "measurable",
     name: "Measurable",
-    prompt: "Show what score, number of questions, or mark target proves progress.",
+    prompt: "Show what score, number of questions, or mark target proves improvement.",
   },
   {
     id: "achievable",
     name: "Achievable",
-    prompt: "Keep the revision target realistic for the time, energy, and resources available.",
+    prompt: "Keep the Unit 2 target realistic for the time, energy, and support available.",
   },
   {
     id: "relevant",
     name: "Relevant",
-    prompt: "Link the revision to Unit 2 marks, weak areas, or the next mock exam.",
+    prompt: "Link the objective to Unit 2 marks, weak areas, or the next mock exam.",
   },
   {
     id: "time-bound",
     name: "Time-bound",
-    prompt: "Set a clear deadline before the lesson, mock, or Unit 2 exam date.",
+    prompt: "Set a clear deadline before the next lesson, mock, or Unit 2 exam.",
   },
 ];
 
@@ -33,13 +33,13 @@ const libraryCards = [
     id: "specific-skill",
     dimension: "specific",
     title: "Pick one Unit 2 skill",
-    description: "Focus on one topic or exam skill instead of revising everything at once.",
+    description: "Focus on one Unit 2 topic or exam skill instead of revising everything at once.",
   },
   {
     id: "specific-context",
     dimension: "specific",
     title: "Name the question type",
-    description: "Mention the exact Unit 2 task, calculation, or extended response style.",
+    description: "Mention the exact Unit 2 task, calculation, or extended-response style.",
   },
   {
     id: "measurable-score",
@@ -51,7 +51,7 @@ const libraryCards = [
     id: "measurable-evidence",
     dimension: "measurable",
     title: "Choose the evidence",
-    description: "Say which exam questions, flashcards, or timed task will prove improvement.",
+    description: "Say which Unit 2 questions, flashcards, or timed task will prove improvement.",
   },
   {
     id: "achievable-support",
@@ -75,7 +75,7 @@ const libraryCards = [
     id: "relevant-purpose",
     dimension: "relevant",
     title: "Explain why it matters",
-    description: "Connect the revision to mock performance, confidence, or exam readiness.",
+    description: "Connect the objective to mock performance, confidence, or exam readiness.",
   },
   {
     id: "time-bound-lesson",
@@ -163,7 +163,7 @@ function renderPreview() {
 
   const checks = [
     {
-      label: "Unit 2 target is clear",
+      label: "Unit 2 focus is clear",
       ok: Boolean(state.draft.focus && state.draft.action) || state.board.specific.length > 0,
     },
     {
@@ -241,7 +241,7 @@ function renderCanvas() {
       if (!cardIds.length) {
         const empty = document.createElement("p");
         empty.className = "zone-empty";
-        empty.textContent = "Drop a revision card here.";
+        empty.textContent = "Drop a Unit 2 prompt here.";
         zone.append(empty);
       } else {
         cardIds
@@ -405,8 +405,8 @@ function resetDraft() {
 function buildObjectiveText() {
   const focus = state.draft.focus || "I";
   const action = state.draft.action || "revise one clear Unit 2 topic";
-  const metric = state.draft.metric || "show clear evidence of improvement";
-  const timeframe = state.draft.timeframe || "before my next Unit 2 revision check";
+  const metric = state.draft.metric || "show clear evidence of improvement in exam practice";
+  const timeframe = state.draft.timeframe || "before my next Unit 2 lesson or mock";
 
   const supports = dimensions
     .flatMap((dimension) => state.board[dimension.id].map(findCard))
