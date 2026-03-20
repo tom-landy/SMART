@@ -97,7 +97,7 @@ h3 {
 }
 
 h1 {
-  max-width: 12ch;
+  max-width: 100%;
   font-size: clamp(2.4rem, 4vw, 4.4rem);
   line-height: 0.98;
 }
@@ -271,20 +271,21 @@ input:focus {
 
 .canvas-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 16px;
 }
 
 .drop-zone {
-  min-height: 320px;
+  min-height: 260px;
   display: grid;
   gap: 10px;
   align-content: start;
-  padding: 14px;
+  padding: 18px;
   border-radius: 24px;
   border: 1px dashed rgba(21, 36, 44, 0.18);
   background: rgba(255, 255, 255, 0.48);
   transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  overflow: hidden;
 }
 
 .drop-zone[data-dimension="specific"] {
@@ -314,14 +315,16 @@ input:focus {
 
 .zone-title {
   display: grid;
-  gap: 2px;
+  gap: 4px;
+  padding-bottom: 6px;
 }
 
 .zone-title p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .zone-empty {
@@ -358,9 +361,10 @@ input:focus {
 }
 
 .board-card {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   cursor: grab;
+  overflow: hidden;
 }
 
 .library-card:active,
@@ -384,6 +388,8 @@ input:focus {
 .board-card h3,
 .saved-card h3 {
   font-size: 1.02rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .library-card p,
@@ -392,6 +398,7 @@ input:focus {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .icon-button,

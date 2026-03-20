@@ -4,27 +4,27 @@ const dimensions = [
   {
     id: "specific",
     name: "Specific",
-    prompt: "Clarify exactly what the student will do or demonstrate.",
+    prompt: "Name the exact Unit 2 topic, skill, or question type being revised.",
   },
   {
     id: "measurable",
     name: "Measurable",
-    prompt: "Show how success will be observed, counted, or checked.",
+    prompt: "Show what score, number of questions, or mark target proves progress.",
   },
   {
     id: "achievable",
     name: "Achievable",
-    prompt: "Keep the target realistic for the learner, support, and time available.",
+    prompt: "Keep the revision target realistic for the time, energy, and resources available.",
   },
   {
     id: "relevant",
     name: "Relevant",
-    prompt: "Connect the target to the course, exam, or growth priority.",
+    prompt: "Link the revision to Unit 2 marks, weak areas, or the next mock exam.",
   },
   {
     id: "time-bound",
     name: "Time-bound",
-    prompt: "Give the objective a clear deadline, lesson window, or review point.",
+    prompt: "Set a clear deadline before the lesson, mock, or Unit 2 exam date.",
   },
 ];
 
@@ -32,62 +32,62 @@ const libraryCards = [
   {
     id: "specific-skill",
     dimension: "specific",
-    title: "Name the exact skill",
-    description: "Focus on one skill or outcome instead of a broad topic.",
+    title: "Pick one Unit 2 skill",
+    description: "Focus on one topic or exam skill instead of revising everything at once.",
   },
   {
     id: "specific-context",
     dimension: "specific",
-    title: "Add the context",
-    description: "Mention the subject, unit, task, or learning situation.",
+    title: "Name the question type",
+    description: "Mention the exact Unit 2 task, calculation, or extended response style.",
   },
   {
     id: "measurable-score",
     dimension: "measurable",
-    title: "Use a success threshold",
-    description: "Include a score, percentage, rubric level, or completion count.",
+    title: "Set a mark target",
+    description: "Include a target score, percentage, or number of marks to aim for.",
   },
   {
     id: "measurable-evidence",
     dimension: "measurable",
-    title: "Point to evidence",
-    description: "State the quiz, paragraph, worksheet, or presentation that proves success.",
+    title: "Choose the evidence",
+    description: "Say which exam questions, flashcards, or timed task will prove improvement.",
   },
   {
     id: "achievable-support",
     dimension: "achievable",
-    title: "Acknowledge support",
-    description: "Mention scaffolds like sentence stems, revision notes, or teacher check-ins.",
+    title: "Use revision support",
+    description: "Mention notes, model answers, formula sheets, or teacher feedback you can use.",
   },
   {
     id: "achievable-step",
     dimension: "achievable",
-    title: "Break into steps",
-    description: "Frame the goal so it fits the learner's current level and next step.",
+    title: "Keep it realistic",
+    description: "Aim for a next step that fits one revision session instead of an impossible leap.",
   },
   {
     id: "relevant-priority",
     dimension: "relevant",
-    title: "Link to a priority",
-    description: "Tie the objective to coursework, exam preparation, or a target grade.",
+    title: "Target a weak area",
+    description: "Tie the objective to the Unit 2 topics where marks are being dropped.",
   },
   {
     id: "relevant-purpose",
     dimension: "relevant",
-    title: "Name the purpose",
-    description: "Explain why the objective matters for the student right now.",
+    title: "Explain why it matters",
+    description: "Connect the revision to mock performance, confidence, or exam readiness.",
   },
   {
     id: "time-bound-lesson",
     dimension: "time-bound",
-    title: "Anchor to a lesson",
-    description: "Set a deadline such as today's lesson, this week, or the next tutorial.",
+    title: "Set a revision deadline",
+    description: "Use a clear deadline like tonight, this weekend, or before the next lesson.",
   },
   {
     id: "time-bound-review",
     dimension: "time-bound",
-    title: "Schedule a review point",
-    description: "Note when progress will be checked or reflected on.",
+    title: "Plan the check-in",
+    description: "Decide when to review scores, fix mistakes, and set the next revision target.",
   },
 ];
 
@@ -168,11 +168,11 @@ function renderPreview() {
 
   const checks = [
     {
-      label: "Specific target is clear",
+      label: "Unit 2 target is clear",
       ok: Boolean(state.draft.focus && state.draft.action) || state.board.specific.length > 0,
     },
     {
-      label: "Success can be measured",
+      label: "Progress can be measured",
       ok: Boolean(state.draft.metric) || state.board.measurable.length > 0,
     },
     {
@@ -180,11 +180,11 @@ function renderPreview() {
       ok: state.board.achievable.length > 0,
     },
     {
-      label: "Purpose is connected",
+      label: "Revision purpose is clear",
       ok: state.board.relevant.length > 0,
     },
     {
-      label: "Time frame is visible",
+      label: "Deadline is visible",
       ok: Boolean(state.draft.timeframe) || state.board["time-bound"].length > 0,
     },
   ];
@@ -246,7 +246,7 @@ function renderCanvas() {
       if (!cardIds.length) {
         const empty = document.createElement("p");
         empty.className = "zone-empty";
-        empty.textContent = "Drop a support card here.";
+        empty.textContent = "Drop a revision card here.";
         zone.append(empty);
       } else {
         cardIds
@@ -286,7 +286,7 @@ function renderSaved() {
   if (!state.saved.length) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
-    empty.textContent = "Save a draft to build a reusable bank of SMART objectives.";
+    empty.textContent = "Save a draft to build a reusable bank of Unit 2 revision objectives.";
     els.savedList.replaceChildren(empty);
     return;
   }
@@ -441,7 +441,7 @@ async function copyObjective() {
 
 function saveObjective() {
   const objective = buildObjectiveText();
-  const title = state.draft.focus || "Untitled SMART objective";
+  const title = state.draft.focus || "Untitled revision objective";
 
   const entry = {
     id: crypto.randomUUID(),
@@ -501,10 +501,10 @@ async function handleSavedAction(event) {
 }
 
 function buildObjectiveText() {
-  const focus = state.draft.focus || "the student";
-  const action = state.draft.action || "demonstrate a clearly defined learning goal";
-  const metric = state.draft.metric || "show measurable evidence of success";
-  const timeframe = state.draft.timeframe || "within an agreed time frame";
+  const focus = state.draft.focus || "I";
+  const action = state.draft.action || "revise one clear Unit 2 topic";
+  const metric = state.draft.metric || "show clear evidence of improvement";
+  const timeframe = state.draft.timeframe || "before my next Unit 2 revision check";
 
   const supports = dimensions
     .flatMap((dimension) => state.board[dimension.id].map(findCard))

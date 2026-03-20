@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SMART Sprint Studio</title>
+    <title>SMART Creator</title>
     <meta
       name="description"
-      content="A drag-and-drop SMART objective builder for students, teachers, and academic coaching."
+      content="A SMART objective creator for 16-18 year olds revising for the Unit 2 exam."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,11 +20,11 @@
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">SMART objective planner</p>
-          <h1>Help students turn vague goals into SMART objectives they can actually follow.</h1>
+          <p class="eyebrow">Unit 2 revision planner</p>
+          <h1>SMART Creator</h1>
           <p class="hero-text">
-            Drag support cards into the SMART canvas, shape a polished objective, and save multiple drafts for
-            lessons, tutoring sessions, or study plans.
+            Build sharper revision targets for 16-18 year olds preparing for the Unit 2 exam. Drag revision prompts
+            into each SMART area, tighten the wording, and save the best objectives to reuse later.
           </p>
         </div>
 
@@ -41,41 +41,41 @@
         <section class="panel composer-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">1. Build the objective</p>
-              <h2>Objective composer</h2>
+              <p class="eyebrow">1. Shape the target</p>
+              <h2>Revision objective builder</h2>
             </div>
             <button class="ghost-button" id="reset-draft" type="button">Reset draft</button>
           </div>
 
           <form id="objective-form" class="composer-form">
             <label>
-              Student or class focus
-              <input id="focus-input" name="focus" placeholder="Year 10 science students" maxlength="100" />
+              Student or revision focus
+              <input id="focus-input" name="focus" placeholder="I" maxlength="100" />
             </label>
             <label>
-              Learning action
-              <input id="action-input" name="action" placeholder="explain photosynthesis using key vocabulary" maxlength="140" />
+              Unit 2 revision action
+              <input id="action-input" name="action" placeholder="revise cash flow, break-even and budgeting questions" maxlength="140" />
             </label>
             <label>
               Success measure
-              <input id="metric-input" name="metric" placeholder="score at least 8/10 on the exit quiz" maxlength="140" />
+              <input id="metric-input" name="metric" placeholder="complete 3 exam questions and hit at least 8/10" maxlength="140" />
             </label>
             <label>
               Time frame
-              <input id="timeframe-input" name="timeframe" placeholder="by the end of next Friday's lesson" maxlength="120" />
+              <input id="timeframe-input" name="timeframe" placeholder="by Sunday night before the mock" maxlength="120" />
             </label>
           </form>
 
           <div class="tips-row">
-            <div class="tip-chip">Drag SMART support cards into the canvas to strengthen the draft.</div>
-            <div class="tip-chip">Saved objectives stay in this browser using local storage.</div>
+            <div class="tip-chip">Use the cards to turn a vague revision plan into a proper exam objective.</div>
+            <div class="tip-chip">Everything saves in this browser, so students can build goals across sessions.</div>
           </div>
 
           <section class="preview-card">
             <div class="section-heading compact-heading">
               <div>
                 <p class="eyebrow">Live draft</p>
-                <h3>Objective preview</h3>
+                <h3>Unit 2 objective preview</h3>
               </div>
               <button class="primary-button" id="copy-objective" type="button">Copy objective</button>
             </div>
@@ -87,8 +87,8 @@
         <section class="panel canvas-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">2. Drag and drop</p>
-              <h2>SMART canvas</h2>
+              <p class="eyebrow">2. Drag revision cards</p>
+              <h2>SMART board</h2>
             </div>
           </div>
 
@@ -98,7 +98,7 @@
         <section class="panel library-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">3. Scaffold the thinking</p>
+              <p class="eyebrow">3. Revision prompts</p>
               <h2>Support card library</h2>
             </div>
           </div>
@@ -109,7 +109,7 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">4. Reuse and refine</p>
-              <h2>Saved objectives</h2>
+              <h2>Saved revision objectives</h2>
             </div>
             <button class="primary-button" id="save-objective" type="button">Save current objective</button>
           </div>
