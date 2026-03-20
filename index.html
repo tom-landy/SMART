@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMART Sprint Studio</title>
+    <meta
+      name="description"
+      content="A drag-and-drop SMART objective builder for students, teachers, and academic coaching."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">SMART objective planner</p>
+          <h1>Help students turn vague goals into SMART objectives they can actually follow.</h1>
+          <p class="hero-text">
+            Drag support cards into the SMART canvas, shape a polished objective, and save multiple drafts for
+            lessons, tutoring sessions, or study plans.
+          </p>
+        </div>
+
+        <div class="hero-panel">
+          <div class="hero-stat">
+            <span class="hero-stat-value" id="smart-score">0%</span>
+            <span class="hero-stat-label">SMART completeness</span>
+          </div>
+          <div class="hero-stat-list" id="smart-progress"></div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="panel composer-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">1. Build the objective</p>
+              <h2>Objective composer</h2>
+            </div>
+            <button class="ghost-button" id="reset-draft" type="button">Reset draft</button>
+          </div>
+
+          <form id="objective-form" class="composer-form">
+            <label>
+              Student or class focus
+              <input id="focus-input" name="focus" placeholder="Year 10 science students" maxlength="100" />
+            </label>
+            <label>
+              Learning action
+              <input id="action-input" name="action" placeholder="explain photosynthesis using key vocabulary" maxlength="140" />
+            </label>
+            <label>
+              Success measure
+              <input id="metric-input" name="metric" placeholder="score at least 8/10 on the exit quiz" maxlength="140" />
+            </label>
+            <label>
+              Time frame
+              <input id="timeframe-input" name="timeframe" placeholder="by the end of next Friday's lesson" maxlength="120" />
+            </label>
+          </form>
+
+          <div class="tips-row">
+            <div class="tip-chip">Drag SMART support cards into the canvas to strengthen the draft.</div>
+            <div class="tip-chip">Saved objectives stay in this browser using local storage.</div>
+          </div>
+
+          <section class="preview-card">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="eyebrow">Live draft</p>
+                <h3>Objective preview</h3>
+              </div>
+              <button class="primary-button" id="copy-objective" type="button">Copy objective</button>
+            </div>
+            <p class="preview-text" id="objective-preview"></p>
+            <div class="checklist" id="objective-checklist"></div>
+          </section>
+        </section>
+
+        <section class="panel canvas-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">2. Drag and drop</p>
+              <h2>SMART canvas</h2>
+            </div>
+          </div>
+
+          <div class="canvas-grid" id="smart-canvas"></div>
+        </section>
+
+        <section class="panel library-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">3. Scaffold the thinking</p>
+              <h2>Support card library</h2>
+            </div>
+          </div>
+          <div class="library-groups" id="card-library"></div>
+        </section>
+
+        <section class="panel saved-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">4. Reuse and refine</p>
+              <h2>Saved objectives</h2>
+            </div>
+            <button class="primary-button" id="save-objective" type="button">Save current objective</button>
+          </div>
+          <div class="saved-list" id="saved-objectives"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="library-card-template">
+      <article class="library-card" draggable="true">
+        <span class="card-tag"></span>
+        <h3></h3>
+        <p></p>
+      </article>
+    </template>
+
+    <template id="board-card-template">
+      <article class="board-card" draggable="true">
+        <div>
+          <span class="card-tag"></span>
+          <h3></h3>
+          <p></p>
+        </div>
+        <button class="icon-button" type="button" aria-label="Remove card">Remove</button>
+      </article>
+    </template>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

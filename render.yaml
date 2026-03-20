@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: smart-sprint-studio
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
