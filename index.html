@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SMART Creator</title>
+    <title>Unit 2 SMART Creator</title>
     <meta
       name="description"
-      content="A SMART objective creator for 16-18 year olds revising for the Unit 2 exam."
+      content="A drag-and-drop Unit 2 SMART objective app where students build strong objectives and identify which statements are SMART."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,62 +20,46 @@
     <div class="page-shell">
       <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Unit 2 SMART objective builder</p>
+          <p class="eyebrow">Unit 2 SMART objective app</p>
           <h1>SMART Creator</h1>
           <p class="hero-text">
-            Drag Unit 2 revision prompts into each SMART area, change the wording, and build stronger exam-focused
-            objectives.
+            Build a strong Unit 2 SMART objective word by word, then practise spotting which revision statements are
+            actually SMART.
           </p>
         </div>
 
         <div class="hero-panel">
-          <div class="hero-stat">
-            <span class="hero-stat-value" id="smart-score">0%</span>
-            <span class="hero-stat-label">SMART completeness</span>
+          <p class="eyebrow">How to use it</p>
+          <div class="hero-steps">
+            <div class="step-card">
+              <strong>1. Build it</strong>
+              <span>Drag phrases into the sentence slots to create a full Unit 2 SMART objective.</span>
+            </div>
+            <div class="step-card">
+              <strong>2. Spot it</strong>
+              <span>Sort sample statements into `SMART` and `Not SMART` to test understanding.</span>
+            </div>
           </div>
-          <div class="hero-stat-list" id="smart-progress"></div>
         </div>
       </header>
 
       <main class="workspace">
-        <section class="panel composer-panel">
+        <section class="panel builder-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">1. Shape the target</p>
-              <h2>Build your Unit 2 SMART objective</h2>
+              <p class="eyebrow">Activity 1</p>
+              <h2>Build a Unit 2 SMART objective</h2>
             </div>
-            <button class="ghost-button" id="reset-draft" type="button">Reset draft</button>
+            <button class="ghost-button" id="reset-builder" type="button">Reset builder</button>
           </div>
 
-          <form id="objective-form" class="composer-form">
-            <label>
-              Student focus
-              <input id="focus-input" name="focus" placeholder="I" maxlength="100" />
-            </label>
-            <label>
-              Unit 2 revision action
-              <input id="action-input" name="action" placeholder="revise cash flow, break-even and budgeting questions" maxlength="140" />
-            </label>
-            <label>
-              Success measure
-              <input id="metric-input" name="metric" placeholder="complete 3 exam questions and hit at least 8/10" maxlength="140" />
-            </label>
-            <label>
-              Time frame
-              <input id="timeframe-input" name="timeframe" placeholder="by Sunday night before the mock" maxlength="120" />
-            </label>
-          </form>
-
-          <div class="tips-row">
-            <div class="tip-chip">Use the cards to turn vague Unit 2 revision into a clear exam objective.</div>
-            <div class="tip-chip">Aim for one realistic target for the next lesson, mock, or study session.</div>
-          </div>
+          <div class="sentence-board" id="sentence-board"></div>
 
           <section class="preview-card">
             <div class="section-heading compact-heading">
               <div>
-                <p class="eyebrow">Live draft</p>
-                <h3>Unit 2 SMART objective preview</h3>
+                <p class="eyebrow">Built objective</p>
+                <h3>Final sentence</h3>
               </div>
               <button class="primary-button" id="copy-objective" type="button">Copy objective</button>
             </div>
@@ -84,47 +68,74 @@
           </section>
         </section>
 
-        <section class="panel canvas-panel">
+        <section class="panel phrase-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">2. Drag Unit 2 cards</p>
-              <h2>SMART board</h2>
+              <p class="eyebrow">Phrase bank</p>
+              <h2>Drag these into the sentence</h2>
             </div>
           </div>
-
-          <div class="canvas-grid" id="smart-canvas"></div>
+          <div class="phrase-bank" id="phrase-bank"></div>
         </section>
 
-        <section class="panel library-panel">
+        <section class="panel sorter-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">3. Unit 2 prompts</p>
-              <h2>Prompt bank</h2>
+              <p class="eyebrow">Activity 2</p>
+              <h2>Sort the statements</h2>
             </div>
+            <button class="ghost-button" id="reset-sorter" type="button">Reset sorter</button>
           </div>
-          <div class="library-groups" id="card-library"></div>
-        </section>
 
+          <div class="sorter-grid">
+            <section class="sort-pool">
+              <div class="sort-heading">
+                <h3>Statement bank</h3>
+                <p>Drag each statement into the correct box.</p>
+              </div>
+              <div class="statement-pool" id="statement-pool"></div>
+            </section>
+
+            <section class="sort-zones">
+              <div class="sort-zone smart-zone" data-zone="smart">
+                <div class="sort-heading">
+                  <h3>SMART</h3>
+                  <p>Specific, measurable, realistic, relevant, and time-bound.</p>
+                </div>
+                <div class="sort-stack" id="smart-zone"></div>
+              </div>
+
+              <div class="sort-zone not-smart-zone" data-zone="not-smart">
+                <div class="sort-heading">
+                  <h3>Not SMART</h3>
+                  <p>Too vague, no measure, unrealistic, or missing a deadline.</p>
+                </div>
+                <div class="sort-stack" id="not-smart-zone"></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="sort-actions">
+            <button class="primary-button" id="check-sorter" type="button">Check answers</button>
+            <p class="sort-feedback" id="sort-feedback">Sort all the statements first, then check.</p>
+          </div>
+        </section>
       </main>
     </div>
 
-    <template id="library-card-template">
-      <article class="library-card" draggable="true">
-        <span class="card-tag"></span>
-        <h3></h3>
-        <p></p>
-      </article>
+    <template id="builder-slot-template">
+      <section class="sentence-slot">
+        <div class="slot-label"></div>
+        <div class="slot-drop"></div>
+      </section>
     </template>
 
-    <template id="board-card-template">
-      <article class="board-card" draggable="true">
-        <div>
-          <span class="card-tag"></span>
-          <h3></h3>
-          <p></p>
-        </div>
-        <button class="icon-button" type="button" aria-label="Remove card">Remove</button>
-      </article>
+    <template id="phrase-template">
+      <article class="phrase-card" draggable="true"></article>
+    </template>
+
+    <template id="statement-template">
+      <article class="statement-card" draggable="true"></article>
     </template>
 
     <script type="module" src="./app.js"></script>

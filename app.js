@@ -1,388 +1,393 @@
-const STORAGE_KEY = "smart-sprint-studio-v1";
+const STORAGE_KEY = "unit2-smart-creator-v2";
 
-const dimensions = [
+const sentenceSlots = [
   {
-    id: "specific",
-    name: "Specific",
-    prompt: "Name the exact Unit 2 topic, skill, or question type to revise.",
+    id: "starter",
+    label: "Starter",
+    hint: "Drag in who the objective is about.",
+    options: [
+      { id: "starter-i", text: "I will" },
+      { id: "starter-we", text: "We will" },
+      { id: "starter-students", text: "Students will" },
+    ],
   },
   {
-    id: "measurable",
-    name: "Measurable",
-    prompt: "Show what score, number of questions, or mark target proves improvement.",
+    id: "topic",
+    label: "Unit 2 focus",
+    hint: "Choose the exact Unit 2 topic or skill.",
+    options: [
+      { id: "topic-cashflow", text: "revise cash flow forecasting questions" },
+      { id: "topic-break-even", text: "practise break-even calculations" },
+      { id: "topic-budgeting", text: "improve budgeting and variance analysis answers" },
+      { id: "topic-justify", text: "write stronger justified business decisions" },
+    ],
   },
   {
-    id: "achievable",
-    name: "Achievable",
-    prompt: "Keep the Unit 2 target realistic for the time, energy, and support available.",
+    id: "measure",
+    label: "Success measure",
+    hint: "Pick a clear score, number, or outcome.",
+    options: [
+      { id: "measure-questions", text: "by completing 3 exam questions correctly" },
+      { id: "measure-score", text: "by scoring at least 8 out of 10" },
+      { id: "measure-marks", text: "by gaining 10 or more marks on a timed task" },
+      { id: "measure-errors", text: "with no more than 2 mistakes in calculations" },
+    ],
   },
   {
     id: "relevant",
-    name: "Relevant",
-    prompt: "Link the objective to Unit 2 marks, weak areas, or the next mock exam.",
+    label: "Why it matters",
+    hint: "Connect it to Unit 2 performance.",
+    options: [
+      { id: "relevant-weakness", text: "so I improve a Unit 2 weakness" },
+      { id: "relevant-mock", text: "so I am more confident for the next mock" },
+      { id: "relevant-marks", text: "so I stop dropping easy Unit 2 marks" },
+    ],
   },
   {
-    id: "time-bound",
-    name: "Time-bound",
-    prompt: "Set a clear deadline before the next lesson, mock, or Unit 2 exam.",
+    id: "deadline",
+    label: "Deadline",
+    hint: "Set a proper deadline.",
+    options: [
+      { id: "deadline-tonight", text: "by tonight" },
+      { id: "deadline-weekend", text: "by Sunday evening" },
+      { id: "deadline-lesson", text: "before the next Unit 2 lesson" },
+      { id: "deadline-mock", text: "before the Unit 2 mock exam" },
+    ],
   },
 ];
 
-const libraryCards = [
+const sorterStatements = [
   {
-    id: "specific-skill",
-    dimension: "specific",
-    title: "Pick one Unit 2 skill",
-    description: "Focus on one Unit 2 topic or exam skill instead of revising everything at once.",
+    id: "smart-1",
+    text: "I will improve break-even calculations by completing 4 Unit 2 questions and scoring at least 8/10 by Sunday evening.",
+    correctZone: "smart",
   },
   {
-    id: "specific-context",
-    dimension: "specific",
-    title: "Name the question type",
-    description: "Mention the exact Unit 2 task, calculation, or extended-response style.",
+    id: "smart-2",
+    text: "I will practise cash flow forecasting for 30 minutes tonight and check my answers using the mark scheme.",
+    correctZone: "smart",
   },
   {
-    id: "measurable-score",
-    dimension: "measurable",
-    title: "Set a mark target",
-    description: "Include a target score, percentage, or number of marks to aim for.",
+    id: "smart-3",
+    text: "I will write one timed 10-mark Unit 2 response before Friday so I can improve my exam technique.",
+    correctZone: "smart",
   },
   {
-    id: "measurable-evidence",
-    dimension: "measurable",
-    title: "Choose the evidence",
-    description: "Say which Unit 2 questions, flashcards, or timed task will prove improvement.",
+    id: "not-1",
+    text: "I will do better in business.",
+    correctZone: "not-smart",
   },
   {
-    id: "achievable-support",
-    dimension: "achievable",
-    title: "Use revision support",
-    description: "Mention notes, model answers, formula sheets, or teacher feedback you can use.",
+    id: "not-2",
+    text: "I will revise Unit 2 loads sometime soon.",
+    correctZone: "not-smart",
   },
   {
-    id: "achievable-step",
-    dimension: "achievable",
-    title: "Keep it realistic",
-    description: "Aim for a next step that fits one revision session instead of an impossible leap.",
-  },
-  {
-    id: "relevant-priority",
-    dimension: "relevant",
-    title: "Target a weak area",
-    description: "Tie the objective to the Unit 2 topics where marks are being dropped.",
-  },
-  {
-    id: "relevant-purpose",
-    dimension: "relevant",
-    title: "Explain why it matters",
-    description: "Connect the objective to mock performance, confidence, or exam readiness.",
-  },
-  {
-    id: "time-bound-lesson",
-    dimension: "time-bound",
-    title: "Set a revision deadline",
-    description: "Use a clear deadline like tonight, this weekend, or before the next lesson.",
-  },
-  {
-    id: "time-bound-review",
-    dimension: "time-bound",
-    title: "Plan the check-in",
-    description: "Decide when to review scores, fix mistakes, and set the next revision target.",
+    id: "not-3",
+    text: "I will get full marks on every question from now on.",
+    correctZone: "not-smart",
   },
 ];
 
 const defaultState = {
-  draft: {
-    focus: "",
-    action: "",
-    metric: "",
-    timeframe: "",
+  builder: {
+    starter: null,
+    topic: null,
+    measure: null,
+    relevant: null,
+    deadline: null,
   },
-  board: {
-    specific: [],
-    measurable: [],
-    achievable: [],
-    relevant: [],
-    "time-bound": [],
+  sorter: {
+    pool: sorterStatements.map((statement) => statement.id),
+    smart: [],
+    "not-smart": [],
   },
 };
 
 const state = loadState();
 
 const els = {
-  form: document.querySelector("#objective-form"),
-  focusInput: document.querySelector("#focus-input"),
-  actionInput: document.querySelector("#action-input"),
-  metricInput: document.querySelector("#metric-input"),
-  timeframeInput: document.querySelector("#timeframe-input"),
+  sentenceBoard: document.querySelector("#sentence-board"),
+  phraseBank: document.querySelector("#phrase-bank"),
   preview: document.querySelector("#objective-preview"),
   checklist: document.querySelector("#objective-checklist"),
-  smartScore: document.querySelector("#smart-score"),
-  smartProgress: document.querySelector("#smart-progress"),
-  canvas: document.querySelector("#smart-canvas"),
-  library: document.querySelector("#card-library"),
   copyObjective: document.querySelector("#copy-objective"),
-  resetDraft: document.querySelector("#reset-draft"),
-  libraryCardTemplate: document.querySelector("#library-card-template"),
-  boardCardTemplate: document.querySelector("#board-card-template"),
+  resetBuilder: document.querySelector("#reset-builder"),
+  resetSorter: document.querySelector("#reset-sorter"),
+  statementPool: document.querySelector("#statement-pool"),
+  smartZone: document.querySelector("#smart-zone"),
+  notSmartZone: document.querySelector("#not-smart-zone"),
+  checkSorter: document.querySelector("#check-sorter"),
+  sortFeedback: document.querySelector("#sort-feedback"),
+  slotTemplate: document.querySelector("#builder-slot-template"),
+  phraseTemplate: document.querySelector("#phrase-template"),
+  statementTemplate: document.querySelector("#statement-template"),
 };
 
 let dragPayload = null;
 
-hydrateInputs();
 renderAll();
 bindEvents();
 
 function bindEvents() {
-  els.form.addEventListener("input", handleDraftInput);
   els.copyObjective.addEventListener("click", copyObjective);
-  els.resetDraft.addEventListener("click", resetDraft);
+  els.resetBuilder.addEventListener("click", resetBuilder);
+  els.resetSorter.addEventListener("click", resetSorter);
+  els.checkSorter.addEventListener("click", checkSorter);
+  [els.statementPool, els.smartZone, els.notSmartZone].forEach((zone) => {
+    zone.addEventListener("dragover", handleSorterDragOver);
+    zone.addEventListener("dragleave", handleDragLeave);
+    zone.addEventListener("drop", handleSorterDrop);
+  });
 }
 
-function handleDraftInput(event) {
-  const input = event.target;
-  if (!(input instanceof HTMLInputElement)) {
+function renderAll() {
+  renderBuilder();
+  renderPhraseBank();
+  renderPreview();
+  renderSorter();
+}
+
+function renderBuilder() {
+  els.sentenceBoard.replaceChildren(
+    ...sentenceSlots.map((slot) => {
+      const node = els.slotTemplate.content.firstElementChild.cloneNode(true);
+      const drop = node.querySelector(".slot-drop");
+
+      node.dataset.slot = slot.id;
+      node.querySelector(".slot-label").textContent = slot.label;
+      drop.dataset.slot = slot.id;
+      drop.addEventListener("dragover", handleBuilderDragOver);
+      drop.addEventListener("dragleave", handleDragLeave);
+      drop.addEventListener("drop", handleBuilderDrop);
+
+      const selectedId = state.builder[slot.id];
+      if (selectedId) {
+        const phrase = findPhrase(selectedId);
+        if (phrase) {
+          drop.append(renderPhraseCard(phrase, "builder", slot.id));
+        }
+      } else {
+        const hint = document.createElement("p");
+        hint.className = "slot-hint";
+        hint.textContent = slot.hint;
+        drop.append(hint);
+      }
+
+      return node;
+    }),
+  );
+}
+
+function renderPhraseBank() {
+  const groups = sentenceSlots.map((slot) => {
+    const group = document.createElement("section");
+    group.className = "phrase-group";
+
+    const heading = document.createElement("div");
+    heading.className = "sort-heading";
+    heading.innerHTML = `<h3>${slot.label}</h3><p>${slot.hint}</p>`;
+    group.append(heading);
+
+    const stack = document.createElement("div");
+    stack.className = "phrase-stack";
+    stack.dataset.slotGroup = slot.id;
+
+    slot.options
+      .filter((option) => state.builder[slot.id] !== option.id)
+      .forEach((option) => stack.append(renderPhraseCard(option, "bank", slot.id)));
+
+    group.append(stack);
+    return group;
+  });
+
+  els.phraseBank.replaceChildren(...groups);
+}
+
+function renderPhraseCard(option, source, slotId) {
+  const card = els.phraseTemplate.content.firstElementChild.cloneNode(true);
+  card.textContent = option.text;
+  card.dataset.optionId = option.id;
+  card.dataset.source = source;
+  card.dataset.slot = slotId;
+
+  card.addEventListener("dragstart", () => {
+    dragPayload = {
+      type: "phrase",
+      optionId: option.id,
+      source,
+      slotId,
+    };
+  });
+
+  card.addEventListener("dragend", () => {
+    dragPayload = null;
+  });
+
+  if (source === "builder") {
+    const removeButton = document.createElement("button");
+    removeButton.className = "mini-button";
+    removeButton.type = "button";
+    removeButton.textContent = "Remove";
+    removeButton.addEventListener("click", () => {
+      state.builder[slotId] = null;
+      persist();
+      renderAll();
+    });
+    card.append(removeButton);
+  }
+
+  return card;
+}
+
+function renderPreview() {
+  const sentence = buildObjectiveSentence();
+  els.preview.textContent = sentence;
+
+  const checks = sentenceSlots.map((slot) => {
+    const complete = Boolean(state.builder[slot.id]);
+    return renderStatusRow(slot.label, complete);
+  });
+
+  els.checklist.replaceChildren(...checks);
+}
+
+function renderSorter() {
+  els.statementPool.replaceChildren(
+    ...state.sorter.pool.map((id) => renderStatementCard(findStatement(id), "pool")),
+  );
+  els.smartZone.replaceChildren(
+    ...state.sorter.smart.map((id) => renderStatementCard(findStatement(id), "smart")),
+  );
+  els.notSmartZone.replaceChildren(
+    ...state.sorter["not-smart"].map((id) => renderStatementCard(findStatement(id), "not-smart")),
+  );
+}
+
+function renderStatementCard(statement, sourceZone) {
+  const card = els.statementTemplate.content.firstElementChild.cloneNode(true);
+  card.textContent = statement?.text || "";
+  card.dataset.statementId = statement?.id || "";
+  card.dataset.sourceZone = sourceZone;
+
+  card.addEventListener("dragstart", () => {
+    dragPayload = {
+      type: "statement",
+      statementId: statement.id,
+      sourceZone,
+    };
+  });
+
+  card.addEventListener("dragend", () => {
+    dragPayload = null;
+  });
+
+  return card;
+}
+
+function handleBuilderDragOver(event) {
+  event.preventDefault();
+  if (dragPayload?.type === "phrase") {
+    event.currentTarget.classList.add("is-over");
+  }
+}
+
+function handleSorterDragOver(event) {
+  event.preventDefault();
+  if (dragPayload?.type === "statement") {
+    event.currentTarget.classList.add("is-over");
+  }
+}
+
+function handleDragLeave(event) {
+  event.currentTarget.classList.remove("is-over");
+}
+
+function handleBuilderDrop(event) {
+  event.preventDefault();
+  const drop = event.currentTarget;
+  drop.classList.remove("is-over");
+
+  if (dragPayload?.type !== "phrase") {
     return;
   }
 
-  state.draft[input.name] = input.value.trimStart();
+  const slotId = drop.dataset.slot;
+  if (!slotId) {
+    return;
+  }
+
+  if (dragPayload.slotId !== slotId) {
+    return;
+  }
+
+  const phrase = findPhrase(dragPayload.optionId);
+  if (!phrase) {
+    return;
+  }
+
+  const ownerSlot = findPhraseOwner(dragPayload.optionId);
+  if (ownerSlot) {
+    state.builder[ownerSlot] = null;
+  }
+
+  state.builder[slotId] = phrase.id;
+  dragPayload = null;
   persist();
   renderAll();
 }
 
-function renderAll() {
-  renderPreview();
-  renderProgress();
-  renderCanvas();
-  renderLibrary();
-}
-
-function renderPreview() {
-  const objective = buildObjectiveText();
-  els.preview.textContent = objective;
-
-  const checks = [
-    {
-      label: "Unit 2 focus is clear",
-      ok: Boolean(state.draft.focus && state.draft.action) || state.board.specific.length > 0,
-    },
-    {
-      label: "Progress can be measured",
-      ok: Boolean(state.draft.metric) || state.board.measurable.length > 0,
-    },
-    {
-      label: "Goal feels realistic",
-      ok: state.board.achievable.length > 0,
-    },
-    {
-      label: "Revision purpose is clear",
-      ok: state.board.relevant.length > 0,
-    },
-    {
-      label: "Deadline is visible",
-      ok: Boolean(state.draft.timeframe) || state.board["time-bound"].length > 0,
-    },
-  ];
-
-  els.checklist.replaceChildren(...checks.map(renderStatusRow));
-}
-
-function renderProgress() {
-  const totalChecks = 9;
-  const completed = [
-    Boolean(state.draft.focus),
-    Boolean(state.draft.action),
-    Boolean(state.draft.metric),
-    Boolean(state.draft.timeframe),
-    ...dimensions.map((dimension) => state.board[dimension.id].length > 0),
-  ].filter(Boolean).length;
-
-  const percent = Math.round((completed / totalChecks) * 100);
-  els.smartScore.textContent = `${percent}%`;
-
-  const rows = dimensions.map((dimension) => {
-    const strong = state.board[dimension.id].length > 0;
-    return {
-      label: dimension.name,
-      status: strong ? "Ready" : "Needs a card",
-      strong,
-    };
-  });
-
-  els.smartProgress.replaceChildren(
-    ...rows.map((row) => {
-      const element = document.createElement("div");
-      element.className = "progress-item";
-      element.innerHTML = `
-        <strong>${row.label}</strong>
-        <span class="status-pill ${row.strong ? "status-ready" : "status-waiting"}">${row.status}</span>
-      `;
-      return element;
-    }),
-  );
-}
-
-function renderCanvas() {
-  els.canvas.replaceChildren(
-    ...dimensions.map((dimension) => {
-      const zone = document.createElement("section");
-      zone.className = "drop-zone";
-      zone.dataset.dimension = dimension.id;
-      zone.addEventListener("dragover", handleZoneDragOver);
-      zone.addEventListener("dragleave", handleZoneDragLeave);
-      zone.addEventListener("drop", handleZoneDrop);
-
-      const title = document.createElement("div");
-      title.className = "zone-title";
-      title.innerHTML = `<h3>${dimension.name}</h3><p>${dimension.prompt}</p>`;
-      zone.append(title);
-
-      const cardIds = state.board[dimension.id];
-      if (!cardIds.length) {
-        const empty = document.createElement("p");
-        empty.className = "zone-empty";
-        empty.textContent = "Drop a Unit 2 prompt here.";
-        zone.append(empty);
-      } else {
-        cardIds
-          .map(findCard)
-          .filter(Boolean)
-          .forEach((card) => zone.append(renderBoardCard(card, dimension.id)));
-      }
-
-      return zone;
-    }),
-  );
-}
-
-function renderLibrary() {
-  const grouped = dimensions.map((dimension) => ({
-    dimension,
-    cards: libraryCards.filter((card) => card.dimension === dimension.id),
-  }));
-
-  els.library.replaceChildren(
-    ...grouped.map(({ dimension, cards }) => {
-      const group = document.createElement("section");
-      group.className = "library-group";
-
-      const heading = document.createElement("div");
-      heading.className = "zone-title";
-      heading.innerHTML = `<h3>${dimension.name}</h3><p>${dimension.prompt}</p>`;
-      group.append(heading);
-
-      cards.forEach((card) => group.append(renderLibraryCard(card)));
-      return group;
-    }),
-  );
-}
-
-function renderLibraryCard(card) {
-  const node = els.libraryCardTemplate.content.firstElementChild.cloneNode(true);
-  node.dataset.cardId = card.id;
-  node.querySelector(".card-tag").textContent = shortDimension(card.dimension);
-  node.querySelector("h3").textContent = card.title;
-  node.querySelector("p").textContent = card.description;
-  node.addEventListener("dragstart", () => {
-    dragPayload = { source: "library", cardId: card.id };
-  });
-  node.addEventListener("dragend", () => {
-    dragPayload = null;
-  });
-  return node;
-}
-
-function renderBoardCard(card, currentDimension) {
-  const node = els.boardCardTemplate.content.firstElementChild.cloneNode(true);
-  node.dataset.cardId = card.id;
-  node.querySelector(".card-tag").textContent = shortDimension(card.dimension);
-  node.querySelector("h3").textContent = card.title;
-  node.querySelector("p").textContent = card.description;
-
-  node.addEventListener("dragstart", () => {
-    dragPayload = { source: "board", cardId: card.id, fromDimension: currentDimension };
-  });
-
-  node.addEventListener("dragend", () => {
-    dragPayload = null;
-  });
-
-  node.querySelector(".icon-button").addEventListener("click", () => {
-    removeCardFromBoard(card.id);
-  });
-
-  return node;
-}
-
-function renderStatusRow(item) {
-  const row = document.createElement("div");
-  row.className = "check-item";
-  row.innerHTML = `
-    <strong>${item.label}</strong>
-    <span class="status-pill ${item.ok ? "status-ready" : "status-waiting"}">${item.ok ? "Ready" : "Missing"}</span>
-  `;
-  return row;
-}
-
-function handleZoneDragOver(event) {
-  event.preventDefault();
-  event.currentTarget.classList.add("is-over");
-}
-
-function handleZoneDragLeave(event) {
-  event.currentTarget.classList.remove("is-over");
-}
-
-function handleZoneDrop(event) {
+function handleSorterDrop(event) {
   event.preventDefault();
   const zone = event.currentTarget;
   zone.classList.remove("is-over");
 
-  if (!dragPayload) {
+  if (dragPayload?.type !== "statement") {
     return;
   }
 
-  const targetDimension = zone.dataset.dimension;
-  const card = findCard(dragPayload.cardId);
-  if (!card) {
-    return;
-  }
-
-  if (dragPayload.source === "board") {
-    removeCardFromBoard(dragPayload.cardId, false);
-  }
-
-  addCardToBoard(dragPayload.cardId, targetDimension || card.dimension);
+  const targetZone = zone.id === "statement-pool" ? "pool" : zone.id === "smart-zone" ? "smart" : "not-smart";
+  moveStatement(dragPayload.statementId, dragPayload.sourceZone, targetZone);
   dragPayload = null;
 }
 
-function addCardToBoard(cardId, dimension) {
-  if (isCardPlaced(cardId)) {
-    if (findCardPlacement(cardId) === dimension) {
-      renderAll();
-      return;
-    }
+function moveStatement(statementId, sourceZone, targetZone) {
+  for (const zone of ["pool", "smart", "not-smart"]) {
+    state.sorter[zone] = state.sorter[zone].filter((id) => id !== statementId);
   }
 
-  removeCardFromBoard(cardId, false);
-  state.board[dimension].push(cardId);
+  state.sorter[targetZone].push(statementId);
+  els.sortFeedback.textContent = "Sort all the statements first, then check.";
+  persist();
+  renderSorter();
+}
+
+function checkSorter() {
+  const sortedCount = state.sorter.smart.length + state.sorter["not-smart"].length;
+  if (sortedCount < sorterStatements.length) {
+    els.sortFeedback.textContent = "Sort every statement before checking the answers.";
+    return;
+  }
+
+  const correct = sorterStatements.filter((statement) => state.sorter[statement.correctZone].includes(statement.id)).length;
+  els.sortFeedback.textContent = `You got ${correct} out of ${sorterStatements.length} correct.`;
+}
+
+function resetBuilder() {
+  state.builder = structuredClone(defaultState.builder);
   persist();
   renderAll();
 }
 
-function removeCardFromBoard(cardId, rerender = true) {
-  dimensions.forEach((dimension) => {
-    state.board[dimension.id] = state.board[dimension.id].filter((item) => item !== cardId);
-  });
-
+function resetSorter() {
+  state.sorter = structuredClone(defaultState.sorter);
+  els.sortFeedback.textContent = "Sort all the statements first, then check.";
   persist();
-  if (rerender) {
-    renderAll();
-  }
+  renderSorter();
 }
 
 async function copyObjective() {
-  const text = buildObjectiveText();
+  const text = buildObjectiveSentence();
   try {
     await navigator.clipboard.writeText(text);
     els.copyObjective.textContent = "Copied";
@@ -390,39 +395,47 @@ async function copyObjective() {
       els.copyObjective.textContent = "Copy objective";
     }, 1200);
   } catch {
-    window.alert("Clipboard access failed. You can still select and copy the objective manually.");
+    window.alert("Clipboard access failed. You can still copy the sentence manually.");
   }
 }
 
-function resetDraft() {
-  state.draft = structuredClone(defaultState.draft);
-  state.board = structuredClone(defaultState.board);
-  hydrateInputs();
-  persist();
-  renderAll();
+function buildObjectiveSentence() {
+  const fallback = {
+    starter: "I will",
+    topic: "revise one clear Unit 2 topic",
+    measure: "by completing at least 2 focused exam tasks",
+    relevant: "so I improve an important Unit 2 weakness",
+    deadline: "before the next Unit 2 lesson",
+  };
+
+  return sentenceSlots
+    .map((slot) => findPhrase(state.builder[slot.id])?.text || fallback[slot.id])
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .concat(".");
 }
 
-function buildObjectiveText() {
-  const focus = state.draft.focus || "I";
-  const action = state.draft.action || "revise one clear Unit 2 topic";
-  const metric = state.draft.metric || "show clear evidence of improvement in exam practice";
-  const timeframe = state.draft.timeframe || "before my next Unit 2 lesson or mock";
-
-  const supports = dimensions
-    .flatMap((dimension) => state.board[dimension.id].map(findCard))
-    .filter(Boolean)
-    .map((card) => card.title.toLowerCase());
-
-  const supportText = supports.length ? ` Supported by ${joinAsSentence(supports)}.` : "";
-
-  return `${capitalize(focus)} will ${action} and ${metric} ${timeframe}.${supportText}`;
+function renderStatusRow(label, complete) {
+  const row = document.createElement("div");
+  row.className = "check-item";
+  row.innerHTML = `
+    <strong>${label}</strong>
+    <span class="status-pill ${complete ? "status-ready" : "status-waiting"}">${complete ? "Done" : "Missing"}</span>
+  `;
+  return row;
 }
 
-function hydrateInputs() {
-  els.focusInput.value = state.draft.focus;
-  els.actionInput.value = state.draft.action;
-  els.metricInput.value = state.draft.metric;
-  els.timeframeInput.value = state.draft.timeframe;
+function findPhrase(optionId) {
+  return sentenceSlots.flatMap((slot) => slot.options).find((option) => option.id === optionId) || null;
+}
+
+function findPhraseOwner(optionId) {
+  return sentenceSlots.find((slot) => state.builder[slot.id] === optionId)?.id || null;
+}
+
+function findStatement(statementId) {
+  return sorterStatements.find((statement) => statement.id === statementId) || null;
 }
 
 function loadState() {
@@ -434,8 +447,12 @@ function loadState() {
   try {
     const parsed = JSON.parse(stored);
     return {
-      draft: { ...defaultState.draft, ...parsed.draft },
-      board: { ...structuredClone(defaultState.board), ...parsed.board },
+      builder: { ...defaultState.builder, ...parsed.builder },
+      sorter: {
+        pool: Array.isArray(parsed.sorter?.pool) ? parsed.sorter.pool : [...defaultState.sorter.pool],
+        smart: Array.isArray(parsed.sorter?.smart) ? parsed.sorter.smart : [],
+        "not-smart": Array.isArray(parsed.sorter?.["not-smart"]) ? parsed.sorter["not-smart"] : [],
+      },
     };
   } catch {
     return structuredClone(defaultState);
@@ -444,44 +461,4 @@ function loadState() {
 
 function persist() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function findCard(cardId) {
-  return libraryCards.find((card) => card.id === cardId) || null;
-}
-
-function isCardPlaced(cardId) {
-  return dimensions.some((dimension) => state.board[dimension.id].includes(cardId));
-}
-
-function findCardPlacement(cardId) {
-  const match = dimensions.find((dimension) => state.board[dimension.id].includes(cardId));
-  return match?.id || null;
-}
-
-function shortDimension(dimensionId) {
-  return dimensions.find((dimension) => dimension.id === dimensionId)?.name || dimensionId;
-}
-
-function capitalize(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function joinAsSentence(items) {
-  if (items.length === 1) {
-    return items[0];
-  }
-  if (items.length === 2) {
-    return `${items[0]} and ${items[1]}`;
-  }
-  return `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
-}
-
-function escapeHtml(text) {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
